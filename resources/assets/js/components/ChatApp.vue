@@ -6,6 +6,7 @@
         />
         <ContactsList
                 :contacts="contacts"
+                @selected="startConversationWith"
         />
     </div>
 </template>
@@ -30,12 +31,26 @@
             }
         },
         mounted() {
-            console.log(this.user)
             axios.get('/contacts')
                 .then(response => {
                     console.log(response.data);
                     this.contacts = response.data;
                 })
+        },
+        methods: {
+            startConversationWith(contact) {
+                axios.get(`/conversation/${contact.id}`)
+                    .then(response => {
+                        this.messages = response.data;
+                        this.selectedContact = contact;
+                    })
+            }
         }
     }
 </script>
+
+<style lang="scss" scoped>
+    .chat-app {
+        display: flex;
+    }
+</style>
